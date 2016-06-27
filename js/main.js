@@ -29,6 +29,14 @@ function init_page(){
     for (var i = 0; i < quest_per_page; i++){
         generate_html(questions[i], i);
     }
+
+    var highscore = Cookies.get('highscore');
+    if(highscore != undefined){
+        $("#highscore_value").html(highscore);
+    } else {
+        Cookies.set('highscore', '0', { expires: 365 });
+        $("#highscore_value").html("0");
+    }
 }
 
 function shuffle(a) {
@@ -47,8 +55,21 @@ function check_answers(){
     $( "input[data-answer|='false']").parent().css( "background-color", "rgba(255,0,0,0.3)" );
     $( "input[data-answer|='true']:checked").parent().parent().children(".question").css( "color", "limegreen" );
     $( "input[data-answer|='true']:not(:checked)").parent().parent().children(".question").css( "color", "red" );
+
     var right_answers = $( "input[data-answer|='true']:checked").length;
-    console.log(right_answers);
+    $("#score_value").html(right_answers + ' / ' + quest_per_page);
+    $("#score").show(400);
+    var highscore = Cookies.get('highscore');
+    if(highscore < right_answers){
+        Cookies.set('highscore', right_answers, { expires: 365 });
+        $("#highscore_value").html(right_answers);
+    }
+
+
+}
+
+function restart(){
+    location.reload();
 }
 
 $( document ).ready(function() {
